@@ -1,4 +1,4 @@
-import React from "react"
+
 import { ExternalLink, Github } from "lucide-react"
 
 // Replace these with your real project images later

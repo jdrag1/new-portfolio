@@ -1,4 +1,4 @@
-import React from 'react'
+
 import I2 from '@/assets/I2.png'
 import { CustomButton } from './CustomButton'
 
