@@ -1,120 +1,167 @@
-
+import { motion } from 'framer-motion'
 import { ExternalLink, Github } from "lucide-react"
+import AnimatedSection from './AnimatedSection'
 
-// Replace these with your real project images later
-const projects = [
-  {
-    title: "Project A",
-    description:
-      "This is a project made to learn the latest languages by building an app.",
-    image:
-      "https://images.unsplash.com/photo-1516116216624-53e697fedbea",
-    tech: ["React", "Node", "Express"],
-    demoLink: "#",
-    sourceLink: "#",
-  },
-  {
-    title: "Project B",
-    description:
-      "This is a project made to learn the latest languages by building an app.",
-    image:
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
-    tech: ["React", "Node", "Express", "Sass"],
-    demoLink: "#",
-    sourceLink: "#",
-  },
-  {
-    title: "Project C",
-    description:
-      "This is a project made to learn the latest languages by building an app.",
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475",
-    tech: ["React", "Node", "Express"],
-    demoLink: "#",
-    sourceLink: "#",
-  },
-]
+// Import the data using relative path
+import { projects } from "../data/projectsData"
+import type { Project } from "../data/projectsData"
 
-const Projects = () => {
+// Props interface
+interface ProjectsProps {
+  sectionTitle?: string
+  projects?: Project[]
+}
+
+const Projects: React.FC<ProjectsProps> = ({
+  sectionTitle = "Featured Projects",
+  projects: projectsProps = projects,
+}) => {
   return (
     <section
       id="projects"
-      className="relative bg-bg-main text-text-main py-24 scroll-mt-24"
+      className="relative bg-bg-main text-text-main py-20 scroll-mt-24"
     >
-      <div className="max-w-7xl mx-auto px-12 lg:px-24">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-mesh opacity-30" />
+      
+      <div className="max-w-6xl mx-auto px-6 lg:px-8 relative z-10">
 
         {/* Section Title */}
-        <h2 className="text-4xl font-bold mb-16 tracking-wide text-center lg:text-left">
-          PROJECTS
-        </h2>
+        <AnimatedSection className="mb-4 lg:mb-16">
+          <div className="text-center lg:text-left">
+            <motion.p 
+              className="text-accent-main text-xs font-semibold uppercase tracking-wider mb-3"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              Portfolio
+            </motion.p>
+            <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight">
+              {sectionTitle}
+            </h2>
+            <div className="h-1 w-16 bg-gradient-purple mt-4 mx-auto lg:mx-0 rounded-full" />
+          </div>
+        </AnimatedSection>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {projects.map((project, index) => (
-            <div
-              key={index}
-              className="group rounded-2xl border border-border-subtle bg-white overflow-hidden transition-all duration-300 hover:shadow-accent-strong"
-            >
-              {/* Image */}
-              <div className="h-48 w-full overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        {projectsProps.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projectsProps.map((project: Project, index: number) => (
+              <AnimatedSection key={index} delay={0.1 * index}>
+                <ProjectCard 
+                  title={project.title}
+                  description={project.description}
+                  image={project.image}
+                  tech={project.tech}
+                  demoLink={project.demoLink}
+                  sourceLink={project.sourceLink}
                 />
-              </div>
-
-              {/* Content */}
-              <div className="p-6 flex flex-col h-full">
-                <h3 className="text-xl font-semibold mb-2">
-                  {project.title}
-                </h3>
-
-                <p className="text-text-muted mb-4 text-sm leading-relaxed">
-                  {project.description}
-                </p>
-
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((tech, i) => (
-                    <span
-                      key={i}
-                      className="rounded-full bg-accent-soft px-3 py-1 text-xs font-medium text-accent-dark"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Buttons */}
-                <div className="mt-auto flex gap-4">
-                  <a
-                    href={project.demoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 rounded-xl bg-accent-main px-4 py-2 text-white text-sm font-medium transition hover:bg-accent-dark"
-                  >
-                    <ExternalLink size={16} />
-                    Demo
-                  </a>
-
-                  <a
-                    href={project.sourceLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 rounded-xl border border-border-subtle px-4 py-2 text-sm font-medium text-text-main transition hover:bg-accent-soft"
-                  >
-                    <Github size={16} />
-                    Source
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+              </AnimatedSection>
+            ))}
+          </div>
+        ) : (
+          <p className="text-text-muted text-center text-base">
+            No projects to display yet. Check back soon!
+          </p>
+        )}
 
       </div>
     </section>
+  )
+}
+
+// Project Card component
+interface ProjectCardProps {
+  title: string
+  description: string
+  image: string
+  tech: string[]
+  demoLink: string
+  sourceLink: string
+}
+
+const ProjectCard: React.FC<ProjectCardProps> = ({
+  title,
+  description,
+  image,
+  tech,
+  demoLink,
+  sourceLink,
+}) => {
+  return (
+    <motion.div 
+      className="group rounded-xl border border-border-subtle bg-bg-card/50 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-accent-main/50"
+      whileHover={{ y: -6 }}
+    >
+      {/* Image */}
+      <div className="relative h-44 w-full overflow-hidden bg-bg-elevated">
+        <motion.img
+          src={image}
+          alt={`${title} project screenshot`}
+          className="h-full w-full object-cover"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.3 }}
+        />
+        {/* Overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-main/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+
+      {/* Content */}
+      <div className="p-5 space-y-3">
+        <h3 className="text-lg font-semibold text-text-main group-hover:text-accent-light transition-colors">
+          {title}
+        </h3>
+
+        <p className="text-text-muted leading-relaxed text-sm line-clamp-2">
+          {description}
+        </p>
+
+        {/* Tech Stack */}
+        {tech.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {tech.map((techItem: string, i: number) => (
+              <span
+                key={i}
+                className="px-2.5 py-1 text-xs font-medium rounded-full bg-accent-main/10 text-accent-light border border-accent-main/20 hover:bg-accent-main/20 transition-colors"
+              >
+                {techItem}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Buttons */}
+        <div className="flex gap-2 pt-1">
+          <motion.a
+            href={demoLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-1.5 rounded-lg bg-accent-main px-3 py-2 text-white text-xs font-medium transition-all hover:bg-accent-dark hover:shadow-glow"
+            aria-label={`View live demo of ${title}`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <ExternalLink size={14} />
+            Demo
+          </motion.a>
+
+          <motion.a
+            href={sourceLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex items-center justify-center gap-1.5 rounded-lg border border-border-main px-3 py-2 text-xs font-medium text-text-main transition-all hover:bg-bg-hover hover:border-accent-main/50"
+            aria-label={`View source code of ${title}`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Github size={14} />
+            Code
+          </motion.a>
+        </div>
+      </div>
+    </motion.div>
   )
 }
 
