@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { CustomButton } from './CustomButton'
 import { ArrowRight } from 'lucide-react'
 
+
 interface HeroContent {
   name: string
   title: string
@@ -27,7 +28,7 @@ const DEFAULT_HERO_CONTENT: HeroContent = {
   ctaLink: "#contact",
   secondaryCtaText: "View projects",
   secondaryCtaLink: "#projects",
-  imageSrc: "/src/assets/I2.png",
+  imageSrc: "/I2.png",
   imageAlt: "Hero visual",
 }
 
